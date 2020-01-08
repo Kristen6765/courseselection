@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hs.timetable.business.section.dao.ISectionDao">
+    <!-- 返回结果设置 -->
+    <resultMap id="BaseResultMap"
+               type="com.hs.timetable.business.section.entity.Section">
+        <id column="CRN" jdbcType="INTEGER" property="CRN" />
+        <id column="Section_number" jdbcType="INTEGER" property="Section_number" />
+        <id column="Course_name" jdbcType="VARCHAR" property="Course_name" />
+        <id column="Prof" jdbcType="VARCHAR" property="Prof" />
+        <id column="Seats" jdbcType="INTEGER" property="Seats" />
+        <id column="Waitinglist" jdbcType="INTEGER" property="Waitinglist" />
+        <id column="wl_status" jdbcType="INTEGER" property="wl_status" />
+        <id column="course_id" jdbcType="INTEGER" property="course_id" />
+    </resultMap>
+
+    <resultMap id="BaseResultMap_follow_count"
+               type="com.hs.timetable.business.section.entity.Section">
+        <id column="CRN" jdbcType="INTEGER" property="CRN" />
+        <id column="Section_number" jdbcType="INTEGER" property="Section_number" />
+        <id column="Course_name" jdbcType="VARCHAR" property="Course_name" />
+        <id column="Prof" jdbcType="VARCHAR" property="Prof" />
+        <id column="Seats" jdbcType="INTEGER" property="Seats" />
+        <id column="Waitinglist" jdbcType="INTEGER" property="Waitinglist" />
+        <id column="wl_status" jdbcType="INTEGER" property="wl_status" />
+        <id column="course_id" jdbcType="INTEGER" property="course_id" />
+        <id column="follow_count" jdbcType="INTEGER" property="follow_count" />
+    </resultMap>
+
+    <!-- 查询字段设置可重复调用 -->
+    <sql id="Base_Column_List">
+        section.CRN,section.Section_number,section.Course_name,
+        section.Prof,section.Seats,section.Waitinglist,section.wl_status,section.course_id
+    </sql>
+
+    <!--
+    <===========查询逻辑===========>
+     -->
+    <!-- 获取section列表，按照关注程度排序 -->
+    <!--
+    SELECT section.CRN,section.Course_name,section.section_number,result.popularity from (
+     SELECT count(1) as popularity,CRN from student_section_follow GROUP BY CRN
+    ) result right JOIN section on result.CRN = section.CRN
+    ORDER BY result.popularity desc;
+    -->
+    <select id ="getSectionListOrderbyFollowCount" parameterType="com.hs.timetable.business.section.entity.Section"
+            resultMap="BaseResultMap_follow_count">
+        select
+        <include refid="Base_Column_List" />
+        ,result.follow_count from (
+          select count(1) as follow_count,CRN
+          from student_section_follow
+          group by CRN
+        ) result
+        left join section on section.CRN = result.CRN
+        order by result.follow_count desc
+    </select>
+
+    <!-- 获取所有section列表 -->
+    <select id ="getSectionList" parameterType="com.hs.timetable.business.section.entity.Section"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from section
+        where 1=1
+    </select>
+
+    <!-- 获取带有course_content信息的section列表 -->
+    <select id ="getSectionListWithCourseContent" parameterType="com.hs.timetable.business.section.entity.Section"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        ,course.Course_content AS Course_content
+        from section join course on course.id=section.course_id
+    </select>
+
+    <!-- if（一个id在student_section_follow 不在 student_section_select) -->
+    <select id ="inFollowNotInSelect" parameterType="com.hs.timetable.business.section.entity.Section"
+            resultMap="BaseResultMap">
+        SELECT followsection.CRN,followsection.student_id as follow_id,
+        selectsection.student_id as select_id
+        from student_section_follow as followsection left join student_section_select as selectsection
+        on followsection.CRN=selectsection.CRN and followsection.student_id=selectsection.student_id
+        WHERE  selectsection.student_id is NULL
+        GROUP BY followsection.CRN,followsection.student_id;
+
+    </select>
+
+    <!-- JOIN section表跟follow关系表， 通过id查找被follow课信息-->
+    <select id ="getCourseInfoUsingStudentId" parameterType="com.hs.timetable.business.student.entity.Student"
+            resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List" />,
+        course.Course_content
+        from section
+        join student_section_follow
+        on section.CRN= student_section_follow.CRN
+        join course
+        on section.Course_id=course.id
+        where 1=1
+        and student_section_follow.student_id=#{id}
+
+    </select>
+
+
+</mapper>

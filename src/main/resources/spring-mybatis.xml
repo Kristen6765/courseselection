@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:cache="http://www.springframework.org/schema/cache"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                        http://www.springframework.org/schema/aop
+	                    http://www.springframework.org/schema/aop/spring-aop.xsd
+                        http://www.springframework.org/schema/tx
+	                    http://www.springframework.org/schema/tx/spring-tx.xsd
+	                    http://www.springframework.org/schema/cache
+						http://www.springframework.org/schema/cache/spring-cache-3.1.xsd
+						">
+
+
+    <!-- 事务管理带aop -->
+    <!--class是引用的spring下的类 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!-- 创建一个事务管理 ref引用的是dataSource的数据源（连接数据库配置） -->
+        <property name="dataSource" ref="jdbcDataSource" />
+    </bean>
+
+
+  	<!-- 过滤掉Controller防止获取两次controller导致事务失效 -->
+    <context:component-scan base-package="com.hs.timetable" >
+    <!-- 	<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/> -->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+
+    <!-- ehcache -->
+    <cache:annotation-driven cache-manager="cacheManager" />
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcache"></property>
+    </bean>
+
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache-setting.xml"></property>
+    </bean>
+
+	<!-- 引入配置文件 -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:jdbc.properties" />
+	</bean>
+
+	<!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"-->
+		<!--destroy-method="close">-->
+		<!--<property name="driverClassName" value="${jdbc.driver}" />-->
+		<!--<property name="url" value="${jdbc.url}" />-->
+		<!--<property name="username" value="${jdbc.username}" />-->
+		<!--<property name="password" value="${jdbc.password}" />-->
+		<!--&lt;!&ndash; 初始化连接大小 &ndash;&gt;-->
+		<!--<property name="initialSize" value="${initialSize}"></property>-->
+		<!--&lt;!&ndash; 连接池最大数量 &ndash;&gt;-->
+		<!--<property name="maxActive" value="${maxActive}"></property>-->
+		<!--&lt;!&ndash; 连接池最大空闲 &ndash;&gt;-->
+		<!--<property name="maxIdle" value="${maxIdle}"></property>-->
+		<!--&lt;!&ndash; 连接池最小空闲 &ndash;&gt;-->
+		<!--<property name="minIdle" value="${minIdle}"></property>-->
+		<!--&lt;!&ndash; 获取连接最大等待时间 &ndash;&gt;-->
+		<!--<property name="maxWait" value="${maxWait}"></property>-->
+		<!--&lt;!&ndash;-->
+		<!--<property name="validationQuery" value="SELECT 1" />-->
+    	<!--<property name="testOnBorrow" value="true"/>-->
+		 <!--&ndash;&gt;-->
+
+	<!--</bean>-->
+
+	<!-- log配置 -->
+	<bean id="jdbcDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${initialSize}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${maxActive}"></property>
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${maxIdle}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${maxWait}"></property>
+		<!-- 避免数据库回收连接而连接池不知道的情况 -->
+		<property name="validationQuery" value="SELECT 1" />
+    	<property name="testOnBorrow" value="true"/>
+	</bean>
+
+
+
+
+
+
+
+
+	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	<!-- section -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.hs.timetable.business.section" />
+		<property name="sqlSessionFactoryBeanName" value="sectionSqlSessionFactory"></property>
+	</bean>
+	<bean id="sectionSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="jdbcDataSource" />
+		<!-- 自动扫描mapping.xml文件 -->
+		<property name="mapperLocations" value="classpath*:com/hs/timetable/business/section/dao/impl/*.xml"></property>
+
+		<property name="plugins">
+			<array>
+				<bean class="com.hs.timetable.util.MapInterceptor"/>
+			</array>
+		</property>
+	</bean>
+
+	<!-- student -->
+
+
+
+
+	<!-- 定时任务 -->
+	<!-- 总配置 -->
+	<!-- 触发器启动 -->
+	<!--<bean name="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">-->
+		<!--<property name="triggers">-->
+			<!--<list>-->
+				<!--<ref bean="noticeSeats" />-->
+				<!--<ref bean="noticeWaittingList" />-->
+			<!--</list>-->
+		<!--</property>-->
+		<!--<property name="autoStartup" value="true" />-->
+	<!--</bean>-->
+
+	<!--&lt;!&ndash; noticeSeats &ndash;&gt;-->
+	<!--&lt;!&ndash; 任务1配置 &ndash;&gt;-->
+	<!--&lt;!&ndash;  &ndash;&gt;-->
+	<!--<bean name="job1" class="com.hs.timetable.business.section.function.SectionNotification"/>-->
+	<!--<bean id="noticeSeatsJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+		<!--&lt;!&ndash; 调用类 &ndash;&gt;-->
+		<!--<property name="targetObject">-->
+			<!--<ref bean="job1"/>-->
+		<!--</property>-->
+		<!--&lt;!&ndash;  调用类方法 &ndash;&gt;-->
+		<!--<property name="targetMethod">-->
+			<!--<value>noticeSeats</value>-->
+		<!--</property>-->
+	<!--</bean>-->
+	<!--&lt;!&ndash; 调度任务时间配置 &ndash;&gt;-->
+	<!--<bean id="noticeSeats" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+		<!--<property name="jobDetail">-->
+			<!--<ref bean="noticeSeatsJob"/>-->
+		<!--</property>-->
+		<!--&lt;!&ndash; 设置触发时间 &ndash;&gt;-->
+		<!--<property name="cronExpression">-->
+			<!--&lt;!&ndash; 每5秒触发一次 &ndash;&gt;-->
+			<!--<value>*/5 * * * * ?</value>-->
+		<!--</property>-->
+	<!--</bean>-->
+
+	<!--&lt;!&ndash; noticeWaittingList &ndash;&gt;-->
+	<!--<bean id="noticeWaittingListJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+		<!--&lt;!&ndash; 调用类 &ndash;&gt;-->
+		<!--<property name="targetObject">-->
+			<!--<ref bean="job1"/>-->
+		<!--</property>-->
+		<!--&lt;!&ndash;  调用类方法 &ndash;&gt;-->
+		<!--<property name="targetMethod">-->
+			<!--<value>noticeWaittingList</value>-->
+		<!--</property>-->
+	<!--</bean>-->
+	<!--&lt;!&ndash; 调度任务时间配置 &ndash;&gt;-->
+	<!--<bean id="noticeWaittingList" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+		<!--<property name="jobDetail">-->
+			<!--<ref bean="noticeWaittingListJob"/>-->
+		<!--</property>-->
+		<!--&lt;!&ndash; 设置触发时间 &ndash;&gt;-->
+		<!--<property name="cronExpression">-->
+			<!--&lt;!&ndash; 每5秒触发一次 &ndash;&gt;-->
+			<!--<value>*/5 * * * * ?</value>-->
+		<!--</property>-->
+	<!--</bean>-->
+
+</beans>

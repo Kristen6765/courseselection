@@ -1,0 +1,188 @@
+<!-- 部门业务mapper -->
+<bean id="departmentSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="logDataSource" />
+    <!-- 自动扫描mapping.xml文件 -->
+    <property name="mapperLocations" value="classpath*:com/jz/bigdata/common/department/**/*.xml"></property>
+
+    <property name="plugins">
+        <array>
+            <bean class="com.jz.bigdata.util.MapInterceptor"/>
+        </array>
+    </property>
+</bean>
+        <!-- 资产业务mapper -->
+<bean id="equipmentSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/equipment/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+        <!-- 审计日志业务mapper -->
+<bean id="noteSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/note/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+        <!--权限业务mapper -->
+<bean id="functionSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/function/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+        <!-- 报警业务mapper -->
+<bean id="alarmSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/alarm/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+        <!-- 安全审计业务mapper -->
+<bean id="safeStrategySqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/safeStrategy/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+        <!-- 菜单业务mapper -->
+<bean id="menuSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/menu/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+
+        <!-- 动作业务mapper -->
+<bean id="actionSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/action/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+
+        <!-- 事件业务mapper -->
+<bean id="eventSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/event/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+
+        <!-- 动作事件业务mapper -->
+<bean id="action_eventSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/action_event/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+
+        <!-- 资产事件业务mapper -->
+<bean id="equipment_eventSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/equipment_event/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+
+        <!-- ansj自定义词典业务mapper -->
+<bean id="ansj_dicSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/ansj_dic/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+
+        <!-- assets自定义词典业务mapper -->
+<bean id="assetsSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/assets/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+
+        <!-- url业务mapper -->
+<bean id="urlSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/url/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>
+
+        <!-- service业务mapper -->
+<bean id="serviceInfoSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="logDataSource" />
+<!-- 自动扫描mapping.xml文件 -->
+<property name="mapperLocations" value="classpath*:com/jz/bigdata/common/serviceInfo/**/*.xml"></property>
+
+<property name="plugins">
+    <array>
+        <bean class="com.jz.bigdata.util.MapInterceptor"/>
+    </array>
+</property>
+</bean>

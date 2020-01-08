@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap-table.min.css" rel="stylesheet">
+    <script src="../js/jquery-2.1.0.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap-table/js/bootstrap-table.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var student_id = localStorage.getItem("student_id");
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/courseselection/section/getCourseInfoUsingStudentId.do",
+                data:{"student_id":student_id},
+                dataType: "json",
+                success: function (msg) {
+                    console.log(msg)
+                    $("#table").bootstrapTable('load', msg[0]);
+                },
+                error: function () {
+                    //alert("错误");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<table data-toggle="table" id="table" data-pagination="true">
+    <thead>
+    <tr>
+        <th data-field="CRN"></th>
+        <th data-field="Section_num"></th>
+        <th data-field="Course_name"></th>
+        <th data-field="Prof"></th>
+        <th data-field="Seats"></th>
+        <th data-field="Waitinglist"></th>
+        <th data-field="wl_status"></th>
+    </tr>
+    </thead>
+</table>
+</body>
